@@ -1,4 +1,3 @@
-# 主函数
 import sys
 import pygame
 
