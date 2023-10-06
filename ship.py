@@ -1,3 +1,4 @@
+# 飞船控制类
 import pygame
 
 

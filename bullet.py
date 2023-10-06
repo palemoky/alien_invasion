@@ -1,3 +1,4 @@
+# 子弹控制类
 import pygame
 from pygame.sprite import Sprite
 
