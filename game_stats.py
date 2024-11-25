@@ -1,8 +1,8 @@
 class GameStats:
 
-    def __init__(self, ai_game):
+    def __init__(self, game):
         """跟踪游戏统计信息"""
-        self.settings = ai_game.settings
+        self.settings = game.settings
         self.reset_stats()
         # 在任何情况下都不应重置最高分
         self.high_score = 0

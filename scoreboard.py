@@ -4,13 +4,13 @@ from ship import Ship
 
 
 class ScoreBoard:
-    def __init__(self, ai_game):
+    def __init__(self, game):
         """初始化显示得分涉及的属性"""
-        self.ai_game = ai_game
-        self.screen = ai_game.screen
+        self.ai_game = game
+        self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
-        self.settings = ai_game.settings
-        self.stats = ai_game.stats
+        self.settings = game.settings
+        self.stats = game.stats
 
         # 显示得分信息时使用的字体设置
         self.text_color = (30, 30, 30)
