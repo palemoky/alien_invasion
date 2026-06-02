@@ -11,6 +11,14 @@ uv run python -m alien_invasion
 
 `uv` 会自动创建虚拟环境并按 `uv.lock` 安装依赖，无需手动操作。
 
+## 测试
+
+```bash
+uv run pytest
+```
+
+测试以无头模式运行（`SDL_VIDEODRIVER=dummy`），无需显示器；CI 见 `.github/workflows/ci.yml`。
+
 PyGame 入门：
 1. 极简入门：http://c.biancheng.net/pygame/
 2. 官方文档：https://www.pygame.org/docs/
