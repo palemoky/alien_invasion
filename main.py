@@ -111,13 +111,13 @@ class Main:
             self.ship.moving_left = True
         elif event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
-
-        # 退出游戏（按下 Cmd+Q 或 Ctrl+Q）
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_q] and (keys[pygame.KMOD_META] or keys[pygame.KMOD_CTRL]):
-            sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        elif event.key == pygame.K_q:
+            # 退出游戏（按下 Cmd+Q 或 Ctrl+Q）
+            mods = pygame.key.get_mods()
+            if mods & (pygame.KMOD_META | pygame.KMOD_CTRL):
+                sys.exit()
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_LEFT:
@@ -230,7 +230,7 @@ class Main:
         """响应飞船和外星人的碰撞"""
         if self.stats.ships_left > 0:
             # 将 ships_left 减 1 并更新记分牌
-            self.stats.ships_left = -1
+            self.stats.ships_left -= 1
             self.sb.prep_ships()
 
             # 清空子弹与飞碟
