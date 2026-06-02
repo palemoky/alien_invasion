@@ -6,8 +6,7 @@ class Settings:
         self.screen_width = 1200
         self.screen_height = 800
         self.bg_color = (230, 230, 230)
-        self.fps = 60  # 流畅画面要至少高于60fps
-        self.show_coords = True
+        self.fps = 60  # 游戏帧率
 
         # 飞船生命设置
         self.ship_limit = 3

@@ -61,8 +61,6 @@ class Main:
 
             # 刷新图像位置
             self._update_screen()
-            # # 显示指针坐标，便于调试
-            # self._show_mouse_coordinates()
             # 设置游戏帧率
             self.clock.tick(self.settings.fps)
 
@@ -83,27 +81,26 @@ class Main:
         """在玩家单击Play按钮时开始新游戏"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
-            if self.play_button.rect.collidepoint(mouse_pos):
-                # 还原游戏设置
-                self.settings.initialize_dynamic_settings()
+            # 还原游戏设置
+            self.settings.initialize_dynamic_settings()
 
-                # 隐藏光标
-                pygame.mouse.set_visible(False)
+            # 隐藏光标
+            pygame.mouse.set_visible(False)
 
-                # 重置游戏信息
-                self.stats.reset_stats()
-                self.sb.prep_score()
-                self.sb.prep_level()
-                self.sb.prep_ships()
-                self.game_active = True
+            # 重置游戏信息
+            self.stats.reset_stats()
+            self.sb.prep_score()
+            self.sb.prep_level()
+            self.sb.prep_ships()
+            self.game_active = True
 
-                # 清空外星人列表与子弹列表
-                self.bullets.empty()
-                self.aliens.empty()
+            # 清空外星人列表与子弹列表
+            self.bullets.empty()
+            self.aliens.empty()
 
-                # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
-                self._create_fleet()
-                self.ship.center_ship()
+            # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
+            self._create_fleet()
+            self.ship.center_ship()
 
     def _check_keydown_events(self, event):
         # 左右移动
@@ -199,32 +196,6 @@ class Main:
 
         # 检查是否有外星人到达了屏幕的下边缘
         self._check_alien_bottom()
-
-    def _show_mouse_coordinates(self):
-        screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
-        font = pygame.font.Font(None, 16)
-
-        # 获取鼠标当前位置
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        # 清空屏幕
-        self.screen.fill((255, 255, 255), (10, 10, self.settings.screen_width, self.settings.screen_height))
-        # 绘制坐标信息
-        text = font.render(f"Mouse Coordinates: ({mouse_x}, {mouse_y})", True, (0, 0, 0))
-        self.screen.blit(text, (10, 10))
-        # 局部刷新
-        pygame.display.update((10, 10, text.get_width(), text.get_height()))
-
-    # def _update_coordinates(self):
-    #     for event in pygame.event.get():
-    #         if event.type == pygame.MOUSEMOTION:
-    #             self._show_mouse_coordinates()
-
-    def _show_coordinates(self):
-        font = pygame.font.Font(None, 16)
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        text = font.render(f"Mouse Coordinates: ({mouse_x}, {mouse_y})", True, (0, 0, 0))
-        self.screen.blit(text, (10, 10))
-        pygame.display.update((10, 10, text.get_width(), text.get_height()))
 
     def _ship_hit(self):
         """响应飞船和外星人的碰撞"""

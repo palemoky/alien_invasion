@@ -39,7 +39,7 @@ class ScoreBoard:
         high_score_str = f"{high_score:,}"
         self.high_score_image = self.font.render(high_score_str,True,self.text_color,self.settings.bg_color)
 
-        # 将最高分房子啊屏幕顶部的中央
+        # 将最高分放在屏幕顶部的中央
         self.high_score_rect = self.high_score_image.get_rect()
         self.high_score_rect.centerx = self.screen_rect.centerx
         self.high_score_rect.top = self.score_rect.top
