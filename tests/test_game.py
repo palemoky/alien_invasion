@@ -1,6 +1,42 @@
+import pygame
+
+
+def _keydown(key):
+    return pygame.event.Event(pygame.KEYDOWN, key=key)
+
+
 def test_create_fleet_makes_aliens(game):
     # 初始化时已创建一支舰队
     assert len(game.aliens) > 0
+
+
+def test_pause_toggles_while_active(game):
+    game.game_active = True
+    game.paused = False
+
+    game._check_keydown_events(_keydown(pygame.K_p))
+    assert game.paused is True
+
+    game._check_keydown_events(_keydown(pygame.K_p))
+    assert game.paused is False
+
+
+def test_pause_ignored_on_start_screen(game):
+    game.game_active = False
+    game.paused = False
+    game._check_keydown_events(_keydown(pygame.K_p))
+    assert game.paused is False
+
+
+def test_difficulty_keys_only_on_start_screen(game):
+    game.game_active = False
+    game._check_keydown_events(_keydown(pygame.K_3))
+    assert game.settings.difficulty == "hard"
+
+    # 游戏进行中按数字键不应改变难度
+    game.game_active = True
+    game._check_keydown_events(_keydown(pygame.K_1))
+    assert game.settings.difficulty == "hard"
 
 
 def test_ship_hit_decrements_lives(game):

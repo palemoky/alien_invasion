@@ -48,8 +48,12 @@ class Main:
 
         # 游戏启动后处于活动状态
         self.game_active = False
+        self.paused = False
 
         self.play_button = Button(self, "Play")
+
+        # 用于绘制提示文字（难度、暂停）的字体
+        self.msg_font = pygame.font.SysFont(None, 36)
 
     def run_game(self):
         """开始游戏的主循环"""
@@ -57,7 +61,7 @@ class Main:
             # 侦听键盘与鼠标事件
             self._check_events()
 
-            if self.game_active:
+            if self.game_active and not self.paused:
                 # 根据按键做出反应
                 self.ship.update()
                 # 更新子弹位置并删除子弹
@@ -99,6 +103,7 @@ class Main:
             self.sb.prep_level()
             self.sb.prep_ships()
             self.game_active = True
+            self.paused = False
 
             # 清空外星人列表与子弹列表
             self.bullets.empty()
@@ -107,7 +112,14 @@ class Main:
             # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
             self._create_fleet()
             self.ship.center_ship()
-            logger.info("开始新游戏")
+            logger.info("开始新游戏（难度：%s）", self.settings.difficulty)
+
+    # 数字键到难度名的映射（仅在开始界面可选）
+    _DIFFICULTY_KEYS = {
+        pygame.K_1: "easy",
+        pygame.K_2: "normal",
+        pygame.K_3: "hard",
+    }
 
     def _check_keydown_events(self, event):
         # 左右移动
@@ -117,6 +129,15 @@ class Main:
             self.ship.moving_right = True
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        elif event.key == pygame.K_p and self.game_active:
+            # 暂停 / 继续
+            self.paused = not self.paused
+            pygame.mouse.set_visible(self.paused)
+            logger.info("游戏%s", "暂停" if self.paused else "继续")
+        elif event.key in self._DIFFICULTY_KEYS and not self.game_active:
+            # 仅在开始界面可切换难度
+            self.settings.set_difficulty(self._DIFFICULTY_KEYS[event.key])
+            logger.info("选择难度：%s", self.settings.difficulty)
         elif event.key == pygame.K_q:
             # 退出游戏（按下 Cmd+Q 或 Ctrl+Q）
             mods = pygame.key.get_mods()
@@ -259,9 +280,26 @@ class Main:
 
         if not self.game_active:
             self.play_button.draw_button()
+            self._draw_difficulty_hint()
+        elif self.paused:
+            self._draw_center_text("已暂停（按 P 继续）")
 
         # 更新屏幕
         pygame.display.flip()
+
+    def _draw_center_text(self, msg, dy=0):
+        """在屏幕中央绘制一行提示文字。"""
+        image = self.msg_font.render(msg, True, (30, 30, 30))
+        rect = image.get_rect()
+        rect.center = self.screen.get_rect().center
+        rect.y += dy
+        self.screen.blit(image, rect)
+
+    def _draw_difficulty_hint(self):
+        """在开始界面提示当前难度及切换方式。"""
+        self._draw_center_text(
+            f"难度：{self.settings.difficulty}（按 1/2/3 选择 简单/普通/困难）", dy=60
+        )
 
 
 def run():
