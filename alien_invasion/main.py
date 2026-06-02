@@ -1,14 +1,15 @@
 import sys
-import pygame
 from time import sleep
 
+import pygame
+
+from .alien import Alien
+from .bullet import Bullet
+from .button import Button
+from .game_stats import GameStats
+from .scoreboard import ScoreBoard
 from .settings import Settings
 from .ship import Ship
-from .bullet import Bullet
-from .alien import Alien
-from .game_stats import GameStats
-from .button import Button
-from .scoreboard import ScoreBoard
 
 
 class Main:
@@ -23,8 +24,9 @@ class Main:
         self.settings = Settings()
 
         # 窗口模式
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height),
-                                              pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(
+            (self.settings.screen_width, self.settings.screen_height), pygame.RESIZABLE
+        )
 
         # 全屏模式
         # self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -261,5 +263,5 @@ def run():
     ai.run_game()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

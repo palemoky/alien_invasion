@@ -1,5 +1,4 @@
 class GameStats:
-
     def __init__(self, game):
         """跟踪游戏统计信息"""
         self.settings = game.settings

@@ -8,7 +8,6 @@ import pytest
 
 from alien_invasion.main import Main
 from alien_invasion.settings import Settings
-from alien_invasion.game_stats import GameStats
 
 
 @pytest.fixture(autouse=True)

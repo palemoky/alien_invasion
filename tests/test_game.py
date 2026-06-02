@@ -1,6 +1,3 @@
-import pygame
-
-
 def test_create_fleet_makes_aliens(game):
     # 初始化时已创建一支舰队
     assert len(game.aliens) > 0
