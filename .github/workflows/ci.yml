@@ -20,6 +20,8 @@ jobs:
         run: uv run ruff check .
       - name: Ruff format check
         run: uv run ruff format --check .
+      - name: Type check (mypy)
+        run: uv run mypy
 
   test:
     runs-on: ubuntu-latest

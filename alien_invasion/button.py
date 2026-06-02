@@ -1,8 +1,15 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pygame
+
+if TYPE_CHECKING:
+    from .main import Main
 
 
 class Button:
-    def __init__(self, game, msg):
+    def __init__(self, game: Main, msg: str) -> None:
         """初始化按钮的属性"""
         self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
@@ -20,13 +27,13 @@ class Button:
         # 按钮的标签只需创建一次
         self._prep_msg(msg)
 
-    def _prep_msg(self, msg):
+    def _prep_msg(self, msg: str) -> None:
         """将msg渲染为图像，并使其在按钮上居中"""
         self.msg_image = self.font.render(msg, True, self.text_color, self.button_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
-    def draw_button(self):
+    def draw_button(self) -> None:
         """绘制一个用颜色填充的按钮，在绘制文本"""
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)

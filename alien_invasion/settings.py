@@ -1,8 +1,18 @@
+from typing import TypedDict
+
+
+class DifficultyPreset(TypedDict):
+    ship_limit: int
+    bullets_allowed: int
+    alien_speed_start: float
+    speedup_scale: float
+
+
 class Settings:
     """存储游戏《外星人入侵》中所有设置的类"""
 
     # 难度预设：影响生命数、子弹上限、初始外星人速度与加速倍率
-    DIFFICULTIES = {
+    DIFFICULTIES: dict[str, DifficultyPreset] = {
         "easy": {
             "ship_limit": 5,
             "bullets_allowed": 5,
@@ -23,7 +33,7 @@ class Settings:
         },
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         # 屏幕设置
         self.screen_width = 1200
         self.screen_height = 800
@@ -56,7 +66,7 @@ class Settings:
         self._alien_speed_start = preset["alien_speed_start"]
         self.initialize_dynamic_settings()
 
-    def initialize_dynamic_settings(self):
+    def initialize_dynamic_settings(self) -> None:
         """初始化随游戏进行而变化的设置"""
         self.ship_speed = 3.75
         self.bullet_speed = 8.5
@@ -68,7 +78,7 @@ class Settings:
         # 记分设置
         self.alien_points = 50
 
-    def increase_speed(self):
+    def increase_speed(self) -> None:
         """提高速度设置的值和外星人分数"""
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale

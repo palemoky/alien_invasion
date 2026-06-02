@@ -16,3 +16,13 @@ repos:
       - id: ruff-check
         args: [--fix]
       - id: ruff-format
+
+  # mypy 作为本地钩子运行，复用项目 uv 环境（含 pygame-ce 等类型信息）
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+        pass_filenames: false

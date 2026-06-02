@@ -1,25 +1,35 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pygame
 from pygame.sprite import Sprite
 
+if TYPE_CHECKING:
+    from .main import Main
+
 
 class Bullet(Sprite):
-    def __init__(self, game):
+    # 收窄基类 Sprite 中 Optional 的 rect 类型声明
+    rect: pygame.Rect
+
+    def __init__(self, game: Main) -> None:
         """在飞船的当前位置创建一个子弹对象"""
         super().__init__()
         self.screen = game.screen
         self.settings = game.settings
         self.color = self.settings.bullet_color
 
-        """在(0,0)处创建一个表示子弹的矩形，再设置正确的位置"""
+        # 在(0,0)处创建一个表示子弹的矩形，再设置正确的位置
         self.rect = pygame.Rect(0, 0, self.settings.bullet_width, self.settings.bullet_height)
         self.rect.midtop = game.ship.rect.midtop
         self.y = float(self.rect.y)
 
-    def update(self):
+    def update(self, *args: object, **kwargs: object) -> None:
         """向上移动子弹"""
         self.y -= self.settings.bullet_speed
-        self.rect.y = self.y
+        self.rect.y = int(self.y)
 
-    def draw_bullet(self):
+    def draw_bullet(self) -> None:
         """在屏幕绘制子弹"""
         pygame.draw.rect(self.screen, self.color, self.rect)

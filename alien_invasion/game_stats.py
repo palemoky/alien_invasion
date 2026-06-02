@@ -1,14 +1,20 @@
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .paths import high_score_path
+
+if TYPE_CHECKING:
+    from .main import Main
 
 logger = logging.getLogger(__name__)
 
 
 class GameStats:
-    def __init__(self, game, high_score_file: Path | None = None):
+    def __init__(self, game: Main, high_score_file: Path | None = None) -> None:
         """跟踪游戏统计信息。high_score_file 可注入，便于测试。"""
         self.settings = game.settings
         self._high_score_file = high_score_file or high_score_path()
@@ -16,7 +22,7 @@ class GameStats:
         # 最高分从存档加载，任何情况下都不应在游戏内被重置
         self.high_score = self._load_high_score()
 
-    def reset_stats(self):
+    def reset_stats(self) -> None:
         """初始化在游戏运行期间可能变化的统计信息"""
         self.ships_left = self.settings.ship_limit
         self.score = 0
