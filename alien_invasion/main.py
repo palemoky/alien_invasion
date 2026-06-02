@@ -1,3 +1,4 @@
+import logging
 import sys
 from time import sleep
 
@@ -7,9 +8,12 @@ from .alien import Alien
 from .bullet import Bullet
 from .button import Button
 from .game_stats import GameStats
+from .logging_config import configure_logging
 from .scoreboard import ScoreBoard
 from .settings import Settings
 from .ship import Ship
+
+logger = logging.getLogger(__name__)
 
 
 class Main:
@@ -103,6 +107,7 @@ class Main:
             # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
             self._create_fleet()
             self.ship.center_ship()
+            logger.info("开始新游戏")
 
     def _check_keydown_events(self, event):
         # 左右移动
@@ -180,7 +185,7 @@ class Main:
 
     def _create_alien(self, x_position, y_position):
         """创建一个外星人并将其放在当前行中"""
-        # print(f"飞碟坐标为：({x_position},{y_position})")
+        logger.debug("创建外星人 @ (%s, %s)", x_position, y_position)
         new_alien = Alien(self)
         new_alien.x = x_position
         new_alien.rect.x = x_position
@@ -219,6 +224,7 @@ class Main:
         else:
             self.game_active = False
             pygame.mouse.set_visible(True)
+            logger.info("游戏结束，最终得分 %s", self.stats.score)
 
     def _check_bullet_alien_collisions(self):
         # 检查子弹是否击中飞碟，击中则删除对应子弹与飞碟
@@ -238,6 +244,7 @@ class Main:
             # 提高等级
             self.stats.level += 1
             self.sb.prep_level()
+            logger.info("进入第 %s 关", self.stats.level)
 
     def _update_screen(self):
         """更新屏幕上的图像，并切换到新屏幕"""
@@ -259,6 +266,8 @@ class Main:
 
 def run():
     """创建游戏实例并运行游戏"""
+    configure_logging()
+    logger.info("启动 Alien Invasion")
     ai = Main()
     ai.run_game()
 
