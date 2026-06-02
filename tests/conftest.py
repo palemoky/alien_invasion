@@ -16,6 +16,15 @@ def _no_sleep(monkeypatch):
     monkeypatch.setattr("alien_invasion.main.sleep", lambda *a, **k: None)
 
 
+@pytest.fixture(autouse=True)
+def _isolated_high_score(tmp_path, monkeypatch):
+    """将最高分存档重定向到临时目录，避免污染真实用户数据。"""
+    monkeypatch.setattr(
+        "alien_invasion.game_stats.high_score_path",
+        lambda: tmp_path / "high_score.json",
+    )
+
+
 @pytest.fixture
 def game():
     """一个完整初始化的游戏实例（无头模式）。"""

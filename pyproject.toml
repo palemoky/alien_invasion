@@ -5,6 +5,7 @@ description = "《外星人入侵》—— Python Crash Course 项目"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "platformdirs>=4.10.0",
     "pygame-ce~=2.5",
 ]
 
