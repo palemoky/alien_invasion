@@ -21,11 +21,13 @@ uv run pytest
 
 ## 开发
 
-代码风格由 [ruff](https://docs.astral.sh/ruff/) 统一（lint + format），并通过 [pre-commit](https://pre-commit.com/) 在提交前自动检查：
+代码风格由 [ruff](https://docs.astral.sh/ruff/) 统一（lint + format），类型由 [mypy](https://mypy-lang.org/) 静态检查，并通过 [pre-commit](https://pre-commit.com/) 在提交前自动运行：
 
 ```bash
 uv run pre-commit install          # 首次：安装 git 钩子
-uv run ruff check . && uv run ruff format .   # 手动检查并格式化
+uv run ruff check . && uv run ruff format .   # lint + 格式化
+uv run mypy                        # 类型检查
+uv run pytest                      # 测试 + 覆盖率门禁（≥80%）
 ```
 
 PyGame 入门：

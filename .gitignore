@@ -5,8 +5,12 @@
 # Ignore Python bytecode cache
 __pycache__/
 
-# Ignore test cache
+# Ignore test & type-check caches and coverage artifacts
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Ignore macOS system files
 .DS_Store
