@@ -4,6 +4,9 @@ from pygame.sprite import Sprite
 class Ship(Sprite):
     """管理飞船的类"""
 
+    # 图像在所有飞船实例（含记分牌的生命图标）间共享，只加载一次
+    _image = None
+
     def __init__(self, game):
         """初始化飞船并设置其初始位置"""
         super().__init__()
@@ -11,8 +14,10 @@ class Ship(Sprite):
         self.settings = game.settings
         self.screen_rect = game.screen.get_rect()
 
-        # 加载飞船图像并获取其外接矩形
-        self.image = pygame.image.load('images/ship.bmp')
+        # 加载飞船图像并获取其外接矩形；convert() 让 blit 更快
+        if Ship._image is None:
+            Ship._image = pygame.image.load('images/ship.bmp').convert()
+        self.image = Ship._image
         self.rect = self.image.get_rect()
 
         # 每艘飞船都在屏幕底部的中央
