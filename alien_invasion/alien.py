@@ -1,6 +1,8 @@
 import pygame
 from pygame.sprite import Sprite
 
+from .paths import IMAGES_DIR
+
 
 class Alien(Sprite):
     """表示单个外星人的类"""
@@ -16,7 +18,7 @@ class Alien(Sprite):
 
         # 加载外星人图像并设置其rect属性；convert() 让 blit 更快
         if Alien._image is None:
-            Alien._image = pygame.image.load('images/alien.bmp').convert()
+            Alien._image = pygame.image.load(IMAGES_DIR / "alien.bmp").convert()
         self.image = Alien._image
         self.rect = self.image.get_rect()
 

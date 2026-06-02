@@ -6,7 +6,7 @@
 依赖使用 [uv](https://docs.astral.sh/uv/) 管理（基于 `pygame-ce`，兼容 Python 3.14）：
 
 ```bash
-uv run main.py
+uv run python -m alien_invasion
 ```
 
 `uv` 会自动创建虚拟环境并按 `uv.lock` 安装依赖，无需手动操作。

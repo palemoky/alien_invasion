@@ -1,6 +1,9 @@
 import pygame
 from pygame.sprite import Sprite
 
+from .paths import IMAGES_DIR
+
+
 class Ship(Sprite):
     """管理飞船的类"""
 
@@ -16,7 +19,7 @@ class Ship(Sprite):
 
         # 加载飞船图像并获取其外接矩形；convert() 让 blit 更快
         if Ship._image is None:
-            Ship._image = pygame.image.load('images/ship.bmp').convert()
+            Ship._image = pygame.image.load(IMAGES_DIR / "ship.bmp").convert()
         self.image = Ship._image
         self.rect = self.image.get_rect()
 

@@ -2,13 +2,13 @@ import sys
 import pygame
 from time import sleep
 
-from settings import Settings
-from ship import Ship
-from bullet import Bullet
-from alien import Alien
-from game_stats import GameStats
-from button import Button
-from scoreboard import ScoreBoard
+from .settings import Settings
+from .ship import Ship
+from .bullet import Bullet
+from .alien import Alien
+from .game_stats import GameStats
+from .button import Button
+from .scoreboard import ScoreBoard
 
 
 class Main:
@@ -255,7 +255,11 @@ class Main:
         pygame.display.flip()
 
 
-if __name__ == '__main__':
-    # 创建游戏实例并运行游戏
+def run():
+    """创建游戏实例并运行游戏"""
     ai = Main()
     ai.run_game()
+
+
+if __name__ == '__main__':
+    run()
