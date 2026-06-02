@@ -1,0 +1,12 @@
+[project]
+name = "alien-invasion"
+version = "0.1.0"
+description = "《外星人入侵》—— Python Crash Course 项目"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pygame-ce~=2.5",
+]
+
+[tool.uv]
+package = false

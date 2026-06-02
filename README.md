@@ -1,6 +1,16 @@
 # 外星人入侵
 《Python编程：从入门到实践》（第三版）飞船入侵练习项目
 
+## 运行
+
+依赖使用 [uv](https://docs.astral.sh/uv/) 管理（基于 `pygame-ce`，兼容 Python 3.14）：
+
+```bash
+uv run main.py
+```
+
+`uv` 会自动创建虚拟环境并按 `uv.lock` 安装依赖，无需手动操作。
+
 PyGame 入门：
 1. 极简入门：http://c.biancheng.net/pygame/
 2. 官方文档：https://www.pygame.org/docs/
