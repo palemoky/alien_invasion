@@ -19,6 +19,15 @@ uv run pytest
 
 测试以无头模式运行（`SDL_VIDEODRIVER=dummy`），无需显示器；CI 见 `.github/workflows/ci.yml`。
 
+## 开发
+
+代码风格由 [ruff](https://docs.astral.sh/ruff/) 统一（lint + format），并通过 [pre-commit](https://pre-commit.com/) 在提交前自动检查：
+
+```bash
+uv run pre-commit install          # 首次：安装 git 钩子
+uv run ruff check . && uv run ruff format .   # 手动检查并格式化
+```
+
 PyGame 入门：
 1. 极简入门：http://c.biancheng.net/pygame/
 2. 官方文档：https://www.pygame.org/docs/
@@ -29,7 +38,7 @@ PyGame 入门：
 3. 贪吃蛇
 4. Flappy Bird
 
-TODO 
+TODO
 - [ ] 增加难度等级（入门、中等、挑战）
 - [ ] 空格键开始与暂停操作
 - [ ] 将最高分写入文件，避免重启丢失

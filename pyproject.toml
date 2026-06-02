@@ -10,7 +10,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.6.0",
     "pytest>=8",
+    "ruff>=0.15.15",
 ]
 
 [tool.uv]
@@ -19,3 +21,11 @@ package = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes, I: isort, UP: pyupgrade, B: bugbear, SIM: flake8-simplify
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
