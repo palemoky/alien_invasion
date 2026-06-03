@@ -3,10 +3,8 @@
 
 ## 运行
 
-依赖使用 [uv](https://docs.astral.sh/uv/) 管理（基于 `pygame-ce`，兼容 Python 3.14）：
-
 ```bash
-uv run python -m alien_invasion
+
 ```
 
 `uv` 会自动创建虚拟环境并按 `uv.lock` 安装依赖，无需手动操作。
@@ -30,16 +28,6 @@ uv run mypy                        # 类型检查
 uv run pytest                      # 测试 + 覆盖率门禁（≥80%）
 ```
 
-PyGame 入门：
-1. 极简入门：http://c.biancheng.net/pygame/
-2. 官方文档：https://www.pygame.org/docs/
-
-引申练习：
-1. 绘制星空
-2. 绘制绵绵细雨
-3. 贪吃蛇
-4. Flappy Bird
-
 ## 操作
 
 - ← / →：移动飞船
@@ -48,7 +36,14 @@ PyGame 入门：
 - `P`：暂停 / 继续
 - Cmd/Ctrl + Q：退出
 
-TODO
-- [x] 增加难度等级（简单、普通、困难）
-- [x] P 键暂停 / 继续
-- [x] 将最高分写入文件，避免重启丢失
+
+## 扩展练习
+1. 绘制星空
+2. 绘制绵绵细雨
+3. 贪吃蛇
+4. 吃豆人
+5. 俄罗斯方块
+6. Flappy Bird
+7. 超级玛丽
+8. 炸弹人
+9. 乒乓球
