@@ -28,15 +28,16 @@ def test_pause_ignored_on_start_screen(game):
     assert game.paused is False
 
 
-def test_difficulty_keys_only_on_start_screen(game):
+def test_difficulty_menu_only_navigable_on_start_screen(game):
     game.game_active = False
-    game._check_keydown_events(_keydown(pygame.K_3))
-    assert game.settings.difficulty == "hard"
+    game._menu_index = 0
+    game._check_keydown_events(_keydown(pygame.K_DOWN))
+    assert game._menu_index == 1
 
-    # 游戏进行中按数字键不应改变难度
+    # 游戏进行中按上下键不应移动难度光标
     game.game_active = True
-    game._check_keydown_events(_keydown(pygame.K_1))
-    assert game.settings.difficulty == "hard"
+    game._check_keydown_events(_keydown(pygame.K_DOWN))
+    assert game._menu_index == 1
 
 
 def test_ship_hit_decrements_lives(game):

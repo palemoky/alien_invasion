@@ -6,8 +6,9 @@ import pygame
 
 from .alien import Alien
 from .bullet import Bullet
-from .button import Button
+from .fonts import get_cjk_font
 from .game_stats import GameStats
+from .i18n import Translator
 from .logging_config import configure_logging
 from .scoreboard import ScoreBoard
 from .settings import Settings
@@ -50,10 +51,22 @@ class Main:
         self.game_active = False
         self.paused = False
 
-        self.play_button = Button(self, "Play")
+        # 根据系统语言选择界面语言（默认英文，系统为中文时显示中文）
+        self.t = Translator()
+        logger.info("界面语言：%s", self.t.lang)
 
-        # 用于绘制提示文字（难度、暂停）的字体
-        self.msg_font = pygame.font.SysFont(None, 36)
+        # 难度菜单（超级玛丽式竖向选择），文案随语言切换
+        self._difficulties: list[str] = ["easy", "normal", "hard"]
+        # 默认高亮当前难度
+        self._menu_index = next(
+            (i for i, key in enumerate(self._difficulties) if key == self.settings.difficulty),
+            1,
+        )
+
+        # 文字字体（需支持中文）
+        self.menu_title_font = get_cjk_font(56)
+        self.msg_font = get_cjk_font(40)
+        self.hint_font = get_cjk_font(28)
 
     def run_game(self) -> None:
         """开始游戏的主循环"""
@@ -88,38 +101,42 @@ class Main:
                 self._check_keyup_events(event)
 
     def _check_play_button(self, mouse_pos: tuple[int, int]) -> None:
-        """在玩家单击Play按钮时开始新游戏"""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.game_active:
-            # 还原游戏设置
-            self.settings.initialize_dynamic_settings()
+        """在开始界面点击某个难度项即可开始游戏。"""
+        if self.game_active:
+            return
+        for index, _key, _image, rect in self._menu_layout():
+            if rect.collidepoint(mouse_pos):
+                self._menu_index = index
+                self._start_game()
+                return
 
-            # 隐藏光标
-            pygame.mouse.set_visible(False)
+    def _start_game(self) -> None:
+        """以当前选中的难度开始新游戏。"""
+        if self.game_active:
+            return
 
-            # 重置游戏信息
-            self.stats.reset_stats()
-            self.sb.prep_score()
-            self.sb.prep_level()
-            self.sb.prep_ships()
-            self.game_active = True
-            self.paused = False
+        # 应用选中的难度（内部会重置动态设置）
+        self.settings.set_difficulty(self._difficulties[self._menu_index])
 
-            # 清空外星人列表与子弹列表
-            self.bullets.empty()
-            self.aliens.empty()
+        # 隐藏光标
+        pygame.mouse.set_visible(False)
 
-            # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
-            self._create_fleet()
-            self.ship.center_ship()
-            logger.info("开始新游戏（难度：%s）", self.settings.difficulty)
+        # 重置游戏信息
+        self.stats.reset_stats()
+        self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
+        self.game_active = True
+        self.paused = False
 
-    # 数字键到难度名的映射（仅在开始界面可选）
-    _DIFFICULTY_KEYS = {
-        pygame.K_1: "easy",
-        pygame.K_2: "normal",
-        pygame.K_3: "hard",
-    }
+        # 清空外星人列表与子弹列表
+        self.bullets.empty()
+        self.aliens.empty()
+
+        # 创建一个新的外星舰队，并将飞船放在屏幕底部的中央
+        self._create_fleet()
+        self.ship.center_ship()
+        logger.info("开始新游戏（难度：%s）", self.settings.difficulty)
 
     def _check_keydown_events(self, event: pygame.event.Event) -> None:
         # 左右移动
@@ -134,10 +151,15 @@ class Main:
             self.paused = not self.paused
             pygame.mouse.set_visible(self.paused)
             logger.info("游戏%s", "暂停" if self.paused else "继续")
-        elif event.key in self._DIFFICULTY_KEYS and not self.game_active:
-            # 仅在开始界面可切换难度
-            self.settings.set_difficulty(self._DIFFICULTY_KEYS[event.key])
-            logger.info("选择难度：%s", self.settings.difficulty)
+        elif event.key == pygame.K_UP and not self.game_active:
+            # 在开始界面向上移动难度光标
+            self._menu_index = (self._menu_index - 1) % len(self._difficulties)
+        elif event.key == pygame.K_DOWN and not self.game_active:
+            # 在开始界面向下移动难度光标
+            self._menu_index = (self._menu_index + 1) % len(self._difficulties)
+        elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER) and not self.game_active:
+            # 回车确认所选难度并开始游戏
+            self._start_game()
         elif event.key == pygame.K_q:
             # 退出游戏（按下 Cmd+Q 或 Ctrl+Q）
             mods = pygame.key.get_mods()
@@ -279,10 +301,9 @@ class Main:
         self.sb.show_score()
 
         if not self.game_active:
-            self.play_button.draw_button()
-            self._draw_difficulty_hint()
+            self._draw_start_menu()
         elif self.paused:
-            self._draw_center_text("已暂停（按 P 继续）")
+            self._draw_center_text(self.t("paused"))
 
         # 更新屏幕
         pygame.display.flip()
@@ -295,11 +316,39 @@ class Main:
         rect.y += dy
         self.screen.blit(image, rect)
 
-    def _draw_difficulty_hint(self) -> None:
-        """在开始界面提示当前难度及切换方式。"""
-        self._draw_center_text(
-            f"难度：{self.settings.difficulty}（按 1/2/3 选择 简单/普通/困难）", dy=60
-        )
+    def _menu_layout(self) -> list[tuple[int, str, pygame.Surface, pygame.Rect]]:
+        """计算难度菜单各项（图像与位置），供绘制与鼠标点击共用。"""
+        center = self.screen.get_rect().center
+        layout: list[tuple[int, str, pygame.Surface, pygame.Rect]] = []
+        for index, key in enumerate(self._difficulties):
+            selected = index == self._menu_index
+            color = (255, 255, 255) if selected else (90, 90, 90)
+            image = self.msg_font.render(self.t(key), True, color)
+            rect = image.get_rect()
+            rect.centerx = center[0]
+            rect.centery = center[1] - 20 + index * 60
+            layout.append((index, key, image, rect))
+        return layout
+
+    def _draw_start_menu(self) -> None:
+        """绘制超级玛丽式的竖向难度菜单。"""
+        screen_rect = self.screen.get_rect()
+
+        title = self.menu_title_font.render(self.t("title"), True, (30, 30, 30))
+        title_rect = title.get_rect(centerx=screen_rect.centerx, centery=screen_rect.centery - 150)
+        self.screen.blit(title, title_rect)
+
+        for index, _key, image, rect in self._menu_layout():
+            if index == self._menu_index:
+                # 选中项绘制一个高亮底框（超级玛丽式光标）
+                highlight = rect.inflate(220 - rect.width, 18)
+                highlight.centerx = rect.centerx
+                pygame.draw.rect(self.screen, (0, 135, 0), highlight, border_radius=8)
+            self.screen.blit(image, rect)
+
+        hint = self.hint_font.render(self.t("menu_hint"), True, (120, 120, 120))
+        hint_rect = hint.get_rect(centerx=screen_rect.centerx, centery=screen_rect.centery + 170)
+        self.screen.blit(hint, hint_rect)
 
 
 def run() -> None:

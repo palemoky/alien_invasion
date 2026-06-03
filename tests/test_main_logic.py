@@ -9,18 +9,33 @@ def _keyup(key):
     return pygame.event.Event(pygame.KEYUP, key=key)
 
 
-def test_play_button_click_starts_game(game):
+def test_menu_click_starts_game_with_clicked_difficulty(game):
     game.game_active = False
-    game._check_play_button(game.play_button.rect.center)
+    # 点击第一个难度项（简单）
+    index, key, _image, rect = game._menu_layout()[0]
+    game._check_play_button(rect.center)
     assert game.game_active is True
     assert game.paused is False
     assert len(game.aliens) > 0
+    assert game.settings.difficulty == key
 
 
-def test_play_button_click_outside_does_nothing(game):
+def test_menu_click_outside_does_nothing(game):
     game.game_active = False
     game._check_play_button((0, 0))
     assert game.game_active is False
+
+
+def test_menu_navigation_wraps_and_enter_starts_game(game):
+    game.game_active = False
+    game._menu_index = 0
+    game._check_keydown_events(_keydown(pygame.K_UP))  # 向上从首项回绕到末项
+    assert game._menu_index == len(game._difficulties) - 1
+    game._check_keydown_events(_keydown(pygame.K_DOWN))  # 回绕到首项
+    assert game._menu_index == 0
+    game._check_keydown_events(_keydown(pygame.K_RETURN))
+    assert game.game_active is True
+    assert game.settings.difficulty == game._difficulties[0]
 
 
 def test_keyup_stops_movement(game):
