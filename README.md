@@ -4,7 +4,7 @@
 ## 运行
 
 ```bash
-
+uv run python -m alien_invasion
 ```
 
 `uv` 会自动创建虚拟环境并按 `uv.lock` 安装依赖，无需手动操作。
